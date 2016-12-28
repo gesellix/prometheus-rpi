@@ -3,6 +3,7 @@ version: "2"
 services:
   prometheus:
     image: gesellix/prometheus:armv7
+    command: ./prometheus -alertmanager.url=http://alertmanager:9093
     container_name: prometheus
     ports:
       - "9090:9090"
@@ -10,6 +11,7 @@ services:
       - prom
     volumes:
       - ./prometheus/prometheus.yml:/prometheus/prometheus.yml
+      - ./prometheus/alerts.rules:/prometheus/alerts.rules
 
   alertmanager:
     image: gesellix/alertmanager:armv7
@@ -23,7 +25,7 @@ services:
 
   node_exporter:
     image: gesellix/node-exporter:armv7
-    command: ./node_exporter -collector.procfs /host/proc -collector.sysfs /host/proc -collector.filesystem.ignored-mount-points "^/(sys|proc|dev|host|etc)($$|/)" -collectors.enabled conntrack,cpu,diskstats,entropy,filefd,filesystem,loadavg,mdadm,meminfo,netdev,netstat,sockstat,stat,textfile,time,uname,vmstat
+    command: ./node_exporter -collector.procfs /host/proc -collector.sysfs /host/proc -collector.filesystem.ignored-mount-points "^/(sys|proc|dev|host|etc)($$|/)" -collectors.enabled conntrack,diskstats,entropy,filefd,filesystem,loadavg,mdadm,meminfo,netdev,netstat,sockstat,stat,textfile,time,uname,vmstat
     container_name: node
     ports:
       - "9100:9100"
