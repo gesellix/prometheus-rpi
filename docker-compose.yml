@@ -23,11 +23,16 @@ services:
 
   node_exporter:
     image: gesellix/node-exporter:armv7
+    command: ./node_exporter -collector.procfs /host/proc -collector.sysfs /host/proc -collector.filesystem.ignored-mount-points "^/(sys|proc|dev|host|etc)($$|/)" -collectors.enabled conntrack,cpu,diskstats,entropy,filefd,filesystem,loadavg,mdadm,meminfo,netdev,netstat,sockstat,stat,textfile,time,uname,vmstat
     container_name: node
     ports:
       - "9100:9100"
     networks:
       - prom
+    volumes:
+      - /proc:/host/proc
+      - /sys:/host/sys
+      - /:/rootfs
 
 networks:
   prom:
