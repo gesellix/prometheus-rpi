@@ -7,7 +7,7 @@ global:
   # Attach these labels to any time series or alerts when communicating with
   # external systems (federation, remote storage, Alertmanager).
   external_labels:
-      monitor: 'codelab-monitor'
+      monitor: 'rpi-monitor'
 
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:
@@ -30,4 +30,9 @@ scrape_configs:
       - names: ['node']
         type: A
         port: 9100
+
+  - job_name: 'tp'
+    metrics_path: "/topicpro/prometheus"
+    static_configs:
+      - targets: ['192.168.178.49:8090']
 
